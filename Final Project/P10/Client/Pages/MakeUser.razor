@@ -1,0 +1,88 @@
+@page "/MakeUser"
+@using P10
+@using P10.Shared
+@inject HttpClient Http
+@inject NavigationManager UriHelper
+@inject IJSRuntime JS
+
+<body>
+    <style>
+        .buttons {
+            background-color: #FDFDFD; 
+            border: none;
+            position: absolute;
+            right: 100%;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 25px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 50%;
+        }
+        .button {
+            background-color: #4CAF50; 
+            border: none;
+            position: absolute;
+            right: 40%;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 50%;
+        }
+        .button2 {
+            background-color: white; 
+            color: black; 
+            border: 2px solid #260062;
+        }
+        .button2:hover {
+            background-color: #260062;
+            color: white;
+        }
+    </style>
+</body>
+<h1 style="text-align: center;  color: #260062;" dir=rtl>اطلاعات خود را وارد کنید :</h1>
+<EditForm Model="@pr" OnValidSubmit="@AddData">   
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="row content">  
+        <div class="col-md-2"><label for="User_name">نام کاربری</label></div>  
+        <div class="col-md-3"><InputText id="User_name" @bind-Value="pr.User_name" /></div> 
+         
+        </div>  
+    <div class="row content">  
+        <div class="col-md-2"><label for="Password">رمز عبور</label></div>  
+        <div class="col-md-3"><InputText id="Password" @bind-Value="pr.Password" /></div>  
+        </div>  
+
+    <div class="row content">  
+        <button type="submit" class="button button2">تائید</button>
+    </div>  
+
+</EditForm>  
+
+@code {
+    private User pr = new User();
+    public async Task AddData(){
+        var URL = @"https://e99521415.herokuapp.com/api/User/AddNewUserToDB";
+        await Http.PostAsJsonAsync<User>(URL,pr);
+        await JS.InvokeVoidAsync(
+                "alert",
+                $" کاربر با موفقیت ایجاد شد");  
+        Navigate1();
+    }
+    void Navigate1()
+    {
+        UriHelper.NavigateTo("/Done");
+        Shopping.ShopList.Clear();
+    }
+    }

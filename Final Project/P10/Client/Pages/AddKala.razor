@@ -1,0 +1,114 @@
+@page "/AddKala"
+@using P10
+@using P10.Shared
+@inject HttpClient Http
+@inject NavigationManager UriHelper
+@inject IJSRuntime JS
+
+<body>
+    <style>
+        .buttons {
+            background-color: #FDFDFD; 
+            border: none;
+            position: absolute;
+            right: 100%;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 25px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 50%;
+        }
+        .button {
+            background-color: #4CAF50; 
+            border: none;
+            position: absolute;
+            right: 40%;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 50%;
+        }
+        .button2 {
+            background-color: white; 
+            color: black; 
+            border: 2px solid #260062;
+        }
+        .button2:hover {
+            background-color: #260062;
+            color: white;
+        }
+    </style>
+</body>
+
+
+
+<h1 style="text-align: center;  color: #260062;" dir=rtl>اطلاعات کالا را وارد کنید :</h1>
+<EditForm Model="@pr" OnValidSubmit="@AddData">   
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="row content">  
+        <div class="col-md-2"><label for="p_name">نام کالا</label></div>  
+        <div class="col-md-3"><InputText id="p_name" @bind-Value="pr.p_name" /></div> 
+        </div>  
+    <div class="row content">  
+            <div class="col-md-2"><label for="Category">دسته بندی</label></div>
+            <div class="col-md-3"><InputSelect style="width: 59%;" id="Category" @bind-Value="pr.p_category" class="form-control">
+            <option value="None">انتخاب کنید</option>
+            <option value="Shirt">پیراهن</option>
+            <option value="Pent">شلوار</option>
+            <option value="Mask">ماسک</option>
+            <option value="Hat">کلاه</option>
+            <option value="Scarf">روسری</option>
+            </InputSelect></div>
+        </div>  
+    <div class="row content">  
+        <div class="col-md-2"><label for="p_info"></label>اطلاعات</div>  
+        <div class="col-md-3"><InputText id="p_info" @bind-Value="pr.p_info" /></div>  
+        </div>  
+    <div class="row content">  
+        <div class="col-md-2"><label for="p_price"></label>قیمت</div>  
+        <div class="col-md-3"><input type="number" id="p_price" @bind="pr.p_price" /></div>  
+        </div>  
+    <div class="row content">  
+        <div class="col-md-2"><label for="p_link"></label>لینک عکس کالا</div>  
+        <div class="col-md-3"><InputText id="p_link" @bind-Value="pr.p_link" /></div>  
+        </div>  
+    <div class="row content">  
+        <div class="col-md-2"><label for="p_count"></label>تعداد</div>  
+        <div class="col-md-3"><input type="number" id="p_count" @bind="pr.p_count" /></div>  
+        </div>  
+    <div class="row content">  
+        <button type="submit" class="button button2">تائید</button>
+    </div>  
+
+</EditForm>  
+<br><br><br>
+
+<button class="button button2" @onclick=@Navigate1>رفتن به دسته بندی</button>
+@code {
+    @* 1 *@
+    private kala pr = new kala();
+    public async Task AddData(){
+        var URL = @"https://e99521415.herokuapp.com/api/Kala/AddNewClotheToDB";
+        await Http.PostAsJsonAsync<kala>(URL,pr);
+        await JS.InvokeVoidAsync(
+                "alert",
+                $" کالا با موفقیت ایجاد شد");  
+    }
+    @* 1 *@
+    void Navigate1()
+    {
+        UriHelper.NavigateTo("/Category");
+    }
+    }

@@ -1,0 +1,77 @@
+@page "/Category"
+@inject NavigationManager UriHelper
+
+<body>
+    <style>
+        .button {
+            background-color: #4CAF50; 
+            border: none;
+            position: absolute;
+            right: 38%;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 50%;
+        }
+        .button2 {
+            background-color: white; 
+            color: black; 
+            border: 2px solid #260062;
+        }
+        .button2:hover {
+            background-color: #260062;
+            color: white;
+        }
+    </style>
+    <h1 style="text-align: center;  color: #260062;" dir=rtl>دسته بندی مورد نظر را انتخاب کنید :</h1>
+    <br><br>
+    <div class="row content">  
+        <button class="button button2" @onclick=@Navigate1>پیراهن </button>
+    </div> 
+    <br><br>
+    <div class="row content">  
+        <button class="button button2" @onclick=@Navigate3>شلوار </button>
+    </div>
+    <br><br> 
+    <div class="row content">  
+        <button class="button button2" @onclick=@Navigate4>روسری</button>
+    </div> 
+    <br><br> 
+    <div class="row content">  
+        <button class="button button2" @onclick=@Navigate2>کلاه </button>
+    </div>
+    <br><br>
+    <div class="row content">  
+        <button class="button button2" @onclick=@Navigate5>ماسک</button>
+    </div>   
+
+</body>
+
+@code {
+    void Navigate1()
+    {
+        UriHelper.NavigateTo("/Shirts");
+    }
+    void Navigate2()
+    {
+        UriHelper.NavigateTo("/Hat");
+    }
+    void Navigate3()
+    {
+        UriHelper.NavigateTo("/Pants");
+    }
+    void Navigate4()
+    {
+        UriHelper.NavigateTo("/Scarf");
+    }
+    void Navigate5()
+    {
+        UriHelper.NavigateTo("/Mask");
+    }
+    }

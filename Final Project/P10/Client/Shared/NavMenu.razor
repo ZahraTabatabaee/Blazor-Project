@@ -1,0 +1,49 @@
+﻿
+<div dir="rtl" class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">وب‌سایت خرید لباس</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div dir="rtl" class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul dir="rtl" class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span style="right: -10px;" class="oi oi-home" aria-hidden="true"></span> خانه
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="Category">
+                <span style="right: -10px;" class="oi oi-list" aria-hidden="true"></span> دسته بندی
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="AddKala">
+                <span style="right: -10px;" class="oi oi-plus" aria-hidden="true"></span> افزودن کالا
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="ShoppingList">
+                <span style="right: -10px;" class="oi oi-cart" aria-hidden="true"></span> سبد خرید
+            </NavLink>
+        </li>
+        @* <li class="nav-item px-3">
+            <NavLink class="nav-link" href="Profile">
+                <span style="right: -10px;" class="oi oi-person" aria-hidden="true"></span> پروفایل شما
+            </NavLink>
+        </li> *@
+
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

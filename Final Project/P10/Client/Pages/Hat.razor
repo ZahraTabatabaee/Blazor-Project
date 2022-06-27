@@ -1,0 +1,162 @@
+@page "/Hat"
+@using P10.Shared
+@using System.Text
+@inject HttpClient Http
+@inject NavigationManager UriHelper
+@inject IJSRuntime JS
+@using System.Text.Json
+@using System.Text.Json.Serialization
+
+
+<h1 style="text-align: center;  color: #260062;" dir=rtl>لیست محصولات</h1>
+
+
+<table style="width: 65%;" class="table">
+    <thead>
+        <tr>
+            <th>تصویر کالا</th>
+            <th>نام کالا</th>
+            <th>اطلاعات</th>
+            <th>قیمت</th>
+            <th>تعداد</th>
+            <th>      </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(kala!=null)
+        {
+            @foreach (var k in kala)
+            {
+                <tr>
+                    <td><img style="width: 30px; height: 45px;" src=@k.p_link></td>
+                    <td>@k.p_name</td>
+                    <td>@k.p_info</td>
+                    <td>@k.p_price</td>
+                    <td>@k.p_count</td>
+                    @if(@k.p_count == 0)
+                    {
+                        <td><button disabled @onclick=@(() => addtocart(k))>اضافه به سبد خرید</button></td>
+                        <td><button @onclick=@(() => update(k))>اضافه کردن تعداد کالا</button></td>
+                        <td><button @onclick=@(() => delete(k))> حذف کالا</button></td>
+                    }
+                    @if(@k.p_count != 0)
+                    {
+                        <td><button @onclick=@(() => addtocart(k))>اضافه به سبد خرید</button></td>
+                        <td><button @onclick=@(() => update(k))>اضافه کردن تعداد کالا</button></td>
+                        <td><button @onclick=@(() => delete(k))> حذف کالا</button></td>;
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+    <style>
+        .button {
+            background-color: #4CAF50; 
+            border: none;
+            position: absolute;
+            right: 38%;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 50%;
+        }
+        .button2 {
+            background-color: white; 
+            color: black; 
+            border: 2px solid #260062;
+        }
+        .button2:hover {
+            background-color: #260062;
+            color: white;
+        }
+    </style>
+</table>
+<br><br><br>
+<button class="button button2" @onclick=@Navigate3>اضافه کردن کالا</button>
+<br><br><br>
+<button class="button button2" @onclick=@Navigate1>رفتن به دسته بندی</button>
+<br><br><br>
+<button class="button button2" @onclick=@Navigate2>پایان خرید</button>
+
+@code {
+    List<kala> kala {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        var URL = @"https://e99521415.herokuapp.com/api/kala/getClotheByCategory/Hat";
+        kala = await Http.GetFromJsonAsync<List<kala>>(URL);
+    }
+    public async Task addtocart(kala ka)
+    {
+        ka.p_count -= 1 ;
+        var URLd = @"https://e99521415.herokuapp.com/api/kala/UpdateClothCountFromDB";
+        if (!Shopping.ShopList.Keys.Contains(ka))
+        {
+            Shopping.ShopList.Add(ka,1);
+            Shopping.sum += ka.p_price;
+        }
+        else
+        {
+            var tmp = Shopping.ShopList[ka]  += 1;
+            Shopping.ShopList.Remove(ka);
+            Shopping.ShopList.Add(ka,tmp);
+            Shopping.sum += ka.p_price;
+        }
+        @* var request = new HttpRequestMessage(HttpMethod.Put, URLd);
+        request.Content = new StringContent(JsonSerializer.Serialize(aa), Encoding.UTF8, "application/json");
+        await Http.SendAsync(request); *@
+        await Http.PutAsJsonAsync<kala>(URLd ,ka);
+        @* await OnInitializedAsync(); *@
+        await JS.InvokeVoidAsync(
+                "alert",
+                $"با موفقیت به لیست خرید اضافه شد");  
+    }
+
+    public async Task delete(kala ka)
+    {
+        int[] aa = new int[]{ka.id} ;
+        var URLd = @"https://e99521415.herokuapp.com/api/kala/RemovekalaFromDB";
+        var request = new HttpRequestMessage(HttpMethod.Delete, URLd);
+        request.Content = new StringContent(JsonSerializer.Serialize(aa), Encoding.UTF8, "application/json");
+        await Http.SendAsync(request);
+        await OnInitializedAsync();
+        await JS.InvokeVoidAsync(
+                "alert",
+                $"با موفقیت حذف شد");  
+    }
+    public async Task update(kala ka)
+    {
+        ka.p_count += 1 ;
+        var URLd = @"https://e99521415.herokuapp.com/api/kala/UpdateClothCountFromDB";
+        if(Shopping.ShopList.Keys.Contains(ka))
+        {
+            int priviousCount = Shopping.ShopList[ka];
+            Shopping.ShopList.Remove(ka);
+            Shopping.ShopList.Add(ka,priviousCount);
+        }
+        await Http.PutAsJsonAsync<kala>(URLd ,ka);
+
+        @* await OnInitializedAsync(); *@
+        await JS.InvokeVoidAsync(
+                "alert",
+                $"تعداد کالا آپدیت شد");  
+    }
+    void Navigate1()
+    {
+        UriHelper.NavigateTo("/Category");
+    }
+    void Navigate2()
+    {
+        UriHelper.NavigateTo("/shoppinglist");
+    }
+    void Navigate3()
+    {
+        UriHelper.NavigateTo("/AddKala");
+    }
+}

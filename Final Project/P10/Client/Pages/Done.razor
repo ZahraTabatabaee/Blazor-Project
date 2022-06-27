@@ -1,0 +1,43 @@
+@page "/Done"
+@inject NavigationManager UriHelper
+
+<body>
+    <style>
+        .button {
+            background-color: #4CAF50; 
+            border: none;
+            position: absolute;
+            right: 38%;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 50%;
+        }
+        .button2 {
+            background-color: white; 
+            color: black; 
+            border: 2px solid #260062;
+        }
+        .button2:hover {
+            background-color: #260062;
+            color: white;
+        }
+    </style>
+    <br><br><br>
+    <h1 style="text-align: center;  color: #260062;" dir=rtl>خرید شما با موفقیت انجام شد :)</h1>
+    <div class="row content">  
+        <button class="button button2" @onclick=@Navigate1>برای رفتن به خانه کلیک کنید</button>
+    </div> 
+</body>
+@code {
+    void Navigate1()
+    {
+        UriHelper.NavigateTo("/");
+    }
+}
